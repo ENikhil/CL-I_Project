@@ -53,12 +53,10 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 			if (flag==0) and (line.split()[0]==w[0]): #Checking 'test' list with dictionary of words from closed class
 				flag=1
 				if (line.split()[1]==w[1]):
-					if(w[2]==0):
+					if(int(w[2])==0):
 						match+=1
-						print(1)
-				elif (w[2]==0):
+				elif (int(w[2])==0):
 					match+=1
-					print(1)
 					break
 			else:
 				continue
@@ -81,14 +79,15 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 				if (w[0]==feat[i][0].split()[0]):
 					feature=feat[i]
 					found=1
+					tag=feat[i][0].split()[1]
 					break
 				else:
 					i+=1
 					continue
 			if(found==0): #Giving a default N_NN tag to the word in case it can't be found in the feature dictionary
-				if(w[1]=="NN_N") * (w[2]==0):
+				if(w[1]=="NN_N") * (int(w[2])==0):
 					match+=1
-				elif (w[1]!="NN_N") * (w[2]==1):
+				elif (w[1]!="NN_N") * (int(w[2])==1):
 					match+=1
 				continue
 			i=1
@@ -336,15 +335,11 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 							else:
 								f7=0
 								break
-			fsum=f1+f2+f3+f4+f5+f6+f7 #Checking if the features found are more than half the required count >(7/2)
-			#print(fsum)
+			fsum=f1+f2+f3+f4+f5+f6+f7 #Checking if the feature sum is more than half the features
 			if (fsum>=3):
-				if(w[1]==tag) * (w[2]==0):
+				if(w[1]==tag) and (int(w[2])==0):
+				elif (int(w[2])==1) and (w[1]!=tag):
 					match+=1
-					print(1)
-				elif (w[2]==1) * (w[1]!=tag):
-					match+=1
-					print(1)
 print("Number of accurate tags: "+str(match))
 print("Total number of words in testing data: "+str(count))
 print("Accuracy= "+str(match*100/count)+" %")
