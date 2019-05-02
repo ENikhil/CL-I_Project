@@ -50,13 +50,15 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 		featno=0
 		bist.seek(0,0)
 		for line in bist:
-			if (flag==0) * (line.split()[0]==w[0]): #Checking 'test' list with dictionary of words from closed class
+			if (flag==0) and (line.split()[0]==w[0]): #Checking 'test' list with dictionary of words from closed class
 				flag=1
 				if (line.split()[1]==w[1]):
 					if(w[2]==0):
 						match+=1
-				elif (w[2]==1):
+						print(1)
+				elif (w[2]==0):
 					match+=1
+					print(1)
 					break
 			else:
 				continue
@@ -64,6 +66,7 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 			continue
 		else:
 			tag=""
+			#Initializing all features
 			f1=-1
 			f2=-1
 			f3=-1
@@ -74,25 +77,23 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 			i=0
 			flag=0
 			found=0
-			while (i<len(feat)) * (found==0):
+			while (i<len(feat)) * (found==0): #Checking if the word can be found in the feature dictionary
 				if (w[0]==feat[i][0].split()[0]):
 					feature=feat[i]
 					found=1
-					#print(feature)
 					break
 				else:
 					i+=1
 					continue
-			if(found==0):
+			if(found==0): #Giving a default N_NN tag to the word in case it can't be found in the feature dictionary
 				if(w[1]=="NN_N") * (w[2]==0):
 					match+=1
 				elif (w[1]!="NN_N") * (w[2]==1):
 					match+=1
 				continue
 			i=1
-			while (i<len(feature)) * (found==1): #Iterating through feature dictionary
-					if (i%7==1) * (f1==-1):
-						#print("xd")
+			while (i<len(feature)) * (found==1): #Iterating through features of the specific word
+					if (i%7==1) * (f1==-1): #Feature 1
 						if (j==0):
 							if(feature[i].split()[1]=="<start>"):
 								f1=1
@@ -118,8 +119,7 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 								f1=0
 								i=2
 								continue
-					elif (i%7==2) * (f2==-1):
-						#print("xd")
+					elif (i%7==2) * (f2==-1): #Feature 2
 						if (j==0):
 							if(feature[i].split()[1]=="<start>") * (feature[i].split()[2]=="<start>"):
 								f2=1
@@ -158,8 +158,7 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 								f2=0
 								i=3
 								continue
-					elif (i%7==3) * (f3==-1):
-						#print("xd")
+					elif (i%7==3) * (f3==-1): #Feature 3
 						if (j==0):
 							if(feature[i].split()[1]=="<start>") * (feature[i].split()[2]=="none"):
 								f3=1
@@ -185,8 +184,7 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 								f3=0
 								i=4
 								continue
-					elif (i%7==4) * (f4==-1):
-						#print("xd")
+					elif (i%7==4) * (f4==-1): #Feature 4
 						if (j==0):
 							if(feature[i].split()[1]=="<start>") * (feature[i].split()[2]=="<start>"):
 								f4=1
@@ -244,14 +242,14 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 							i=5
 							continue
 						else:
+							i+=7							
 							if (i<len(feature)):
 								continue
 							else:
 								f4=0
 								i=5
 								continue
-					elif (i%7==5) * (f5==-1):
-						#print("xd")
+					elif (i%7==5) * (f5==-1): #Feature 5
 						if (j==0):
 							if(feature[i].split()[1]=="none") * (feature[i].split()[2]==sentence[j+1][1]):
 								f5=1
@@ -278,7 +276,7 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 									f5=0
 									i=6
 									continue
-						elif (sentence[j-1][1]==feature[i].split()[2]) * (sentence[j+1][1]==feature[i].split()[3]):
+						elif (sentence[j-1][1]==feature[i].split()[1]) * (sentence[j+1][1]==feature[i].split()[2]):
 							f5=1
 							i=6
 							continue
@@ -290,8 +288,7 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 								f5=0
 								i=6
 								continue
-					elif (i%7==6) * (f6==-1):
-						#print("xd")
+					elif (i%7==6) * (f6==-1): #Feature 6
 						if (j==len(sentence)-1):
 							if(feature[i].split()[1]=="<end>"):
 								f6=1
@@ -317,8 +314,7 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 								f6=0
 								i=7
 								continue
-					elif (i%7==0) * (f7==-1):
-						#print("xd")
+					elif (i%7==0) * (f7==-1): #Feature 7
 						if (j==len(sentence)-1):
 							if(feature[i].split()[1]=="<end>") * (feature[i].split()[2]=="none"):
 								f7=1
@@ -340,12 +336,15 @@ for k, sentence in enumerate(llw): #Iterating through sentences
 							else:
 								f7=0
 								break
-			fsum=f1+f2+f3+f4+f5+f6+f7
-			print("lol")
-			if (fsum>=4) * (flag==1):
+			fsum=f1+f2+f3+f4+f5+f6+f7 #Checking if the features found are more than half the required count >(7/2)
+			#print(fsum)
+			if (fsum>=3):
 				if(w[1]==tag) * (w[2]==0):
 					match+=1
+					print(1)
 				elif (w[2]==1) * (w[1]!=tag):
-					match+=1				
-print(match)
-print(count)
+					match+=1
+					print(1)
+print("Number of accurate tags: "+str(match))
+print("Total number of words in testing data: "+str(count))
+print("Accuracy= "+str(match*100/count)+" %")
