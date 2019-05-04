@@ -146,4 +146,3 @@
 %	RD_SYM
 $	RD_SYM
 @	RD_SYM
-	RD_SYM
