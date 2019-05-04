@@ -24,7 +24,7 @@ for line in lines:
 		lw=[]
 
 #Adding the feature dictionary to a list of lists
-fdict=open("1features.txt", 'r')
+fdict=open("features.txt", 'r')
 ens=(en.rstrip() for en in fdict)
 ens=(en for en in ens if en)
 feature=[]
